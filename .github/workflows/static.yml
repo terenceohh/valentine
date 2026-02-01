@@ -1,0 +1,39 @@
+If you are looking for a .yml file, you are likely planning to use GitHub Actions to automate the hosting of your Valentine's page on GitHub Pages. This is the most professional way to do it—it ensures that every time you update your code, the website updates automatically.
+
+🚀 The GitHub Actions Workflow (deploy.yml)
+Create a folder in your project called .github and a subfolder called workflows. Save this code as static.yml inside that folder.
+
+YAML
+name: Deploy Valentine Site to Pages
+
+on:
+  push:
+    branches: ["main"] # Runs every time you push to the main branch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload the entire repository (since index.html is in the root)
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
